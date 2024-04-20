@@ -27,12 +27,10 @@ const SignUpForm = () => {
         signUpUsername: "",
         signUpPassword: "",
     });
-    setFormErrors({
-        signUpFullName: "",
-        signUpEmail: "",
-        signUpUsername: "",
-        signUpPassword: "",
-    });
+    
+    
+    const [formErrors, setFormErrors] = useState({});
+   
 
 
     const clearForm = () => {
@@ -42,11 +40,17 @@ const SignUpForm = () => {
             signUpUsername: "",
             signUpPassword: "",
         });
+        setFormErrors({
+            signUpFullName: "",
+            signUpEmail: "",
+            signUpUsername: "",
+            signUpPassword: "",
+        });
+        
     };
 
     // const [signUpButtonDisabled, setSignUpButtonDisabled] = useState(true);
 
-    const [formErrors, setFormErrors] = useState({});
 
     // todo 1: form validation: WORKING
     // todo 2: form submit to backend

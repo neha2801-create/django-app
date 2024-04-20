@@ -9,6 +9,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import CanvasActivePage from "./pages/CanvasActivePage";
 import CanvasPageActiveTwo from "./pages/CanvasPageActiveTwo";
 import Dashboard from "./pages/Dashboard";
+import UserPreferences from "./pages/UserPreferences";
 
 import { createTheme, ThemeProvider } from "@mui/material";
 import { getTheme } from "./Theme";
@@ -44,6 +45,12 @@ const router = createBrowserRouter([
         path: "/payground",
         element: <Playground />,
     },
+    {
+        path: "/userPref",
+        element: <UserPreferences />,
+    },
+
+
 ]);
 
 function App() {

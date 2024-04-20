@@ -6,8 +6,10 @@ POST {{host}}/accounts/register/ HTTP/1.1
 Content-Type: application/json
 
 {
-  "username": "deep@gmail.com",
-  "password": "deep"
+  "signUpUsername": "temp",
+  "signUpEmail": "temp@gmail.com",
+  "signUpFullName": "temp temp",
+  "signUpPassword": "temp"
 }
 
 
@@ -17,8 +19,8 @@ POST {{host}}/accounts/login/ HTTP/1.1
 Content-Type: application/json
 
 {
-    "email": "deep@gmail.com",
-    "password": "deep"
+    "email": "temp@gmail.com",
+    "password": "temp1"
 }
 
 ###
@@ -28,6 +30,24 @@ POST {{host}}/accounts/logout/ HTTP/1.1
 ###
 # check login status
 GET {{host}}/accounts/check/ HTTP/1.1
+
+###
+
+# delete user
+DELETE {{host}}/accounts/delete/ HTTP/1.1
+Content-Type: application/json
+
+###
+
+# update password
+PUT http://127.0.0.1:8000/accounts/update_password/
+Content-Type: application/json
+
+{
+    "old_password": "temp",
+    "new_password": "temp1"
+}
+
 
 ###
 
@@ -90,5 +110,6 @@ POST {{host}}/notes/pin/1/ HTTP/1.1
 Content-Type: application/json
 
 {
-  "pin": true // Or false, depending on the desired action
+  "pin": true
 }
+

@@ -1,5 +1,6 @@
 from django.db import models
 from canvas.models import Canvas
+from django.utils import timezone
 
 # Create your models here.
 
@@ -19,4 +20,5 @@ class Note(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return self.canvas.title + " - " + self.notesBody
+        local_timestamp = timezone.localtime(self.timestamp) if self.timestamp.tzinfo else self.timestamp
+        return self.canvas.title + " - " + self.notesBody + " - " + local_timestamp.strftime('%Y-%m-%d %H:%M:%S')

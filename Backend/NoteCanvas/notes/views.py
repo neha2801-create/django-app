@@ -67,22 +67,44 @@ def delete_note(request, note_id):
 
 @csrf_exempt
 @require_http_methods(["PUT"])
-def update_note(request, note_id):
+def update_note(request, note_order):
+    # print("in update")
     try:
+
         data = json.loads(request.body)
-        note = Note.objects.get(id=note_id)
-        note.notesBody = data.get('notesBody', note.notesBody)
-        note.posX = data.get('posX', note.posX)
-        note.posY = data.get('posY', note.posY)
-        note.height = data.get('height', note.height)
-        note.width = data.get('width', note.width)
-        note.pinned = data.get('pinned', note.pinned)
-        note.color = data.get('color', note.color)
+        print(data)
+        canvas_order = int(data.get('canvasId'))
+        canvases = Canvas.objects.filter(user=request.user).order_by('created_at')
+        # print("again ", canvas_order, canvases, len(canvases))
+        # canvas = canvases[canvas_order-1]
+        try:
+            canvas = canvases[canvas_order-1]
+        except IndexError:
+            return JsonResponse({"error": "No such canvas."}, status=404)
+        print("canvas ", canvas)
+        notes = Note.objects.filter(canvas=canvas).order_by('created_at')
+        try:
+            note = notes[note_order-1]
+        except IndexError:
+            return JsonResponse({"error": "No such note."}, status=404)
+        # print(notes)
+        # print(data, " ", note_order, " ", request.user, " ", data.get('canvasId'))
+        # so I have canvasnumber, username
+        # note = Note.objects.get(id=note_id)
+        note.notesBody = data.get('body', note.notesBody)
+        note.posX = float(data.get('left', note.posX))
+        note.posY = float(data.get('top', note.posY))
+        note.height = float(data.get('height', note.height))
+        note.width = float(data.get('width', note.width))
+        # note.pinned = data.get('pinned', note.pinned)
+        note.color = data.get('backgroundColor', note.color)
         note.save()
         return JsonResponse({"message": "Note updated successfully."}, status=200)
     except ObjectDoesNotExist:
+        # print("obj error")
         return JsonResponse({"error": "Note not found."}, status=404)
     except Exception as e:
+        # print("exception error")
         return JsonResponse({"error": str(e)}, status=400)
 
 @csrf_exempt
@@ -97,3 +119,37 @@ def pin_note(request, note_id):
         return JsonResponse({"error": "Note not found."}, status=404)
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
+
+
+@csrf_exempt
+@require_http_methods(["GET"])
+def get_notes(request, canvas_order):
+    try:
+        canvas_order = int(canvas_order)
+
+        # Retrieve all canvases for the user, sorted by creation time
+        canvases = Canvas.objects.filter(user=request.user).order_by('created_at')
+        try:
+            canvas = canvases[canvas_order-1]
+        except IndexError:
+            return JsonResponse({"error": "No such canvas."}, status=404)
+
+        # Get all notes for the selected canvas, ordered by their creation time
+        notes = Note.objects.filter(canvas=canvas).order_by('created_at')
+
+        # Serialize the notes to send as JSON
+        notes_data = [{
+            "id": note.id,
+            "body": note.notesBody,
+            "left": note.posX,
+            "top": note.posY,
+            "height": note.height,
+            "width": note.width,
+            "color": note.color
+        } for note in notes]
+
+        return JsonResponse({"notes": notes_data}, status=200, safe=False)
+    except ObjectDoesNotExist:
+        return JsonResponse({"error": "Canvas not found."}, status=404)
+    except Exception as e:
+        return JsonResponse({"error": f"An error occurred: {str(e)}"}, status=400)

@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 const DropTarget = ({ children, id, spaceNumber, canvasName }) => {
 
     id = useParams();
-    console.log("LOL",id);
+    console.log("Canvas ID",id.id);
 
     const [{ isOver }, drop] = useDrop({
         accept: "box",
@@ -18,6 +18,7 @@ const DropTarget = ({ children, id, spaceNumber, canvasName }) => {
             console.log("left: ", left);
             console.log("top: ", top);
             return { left, top };
+            
         },
         collect: (monitor) => ({
             isOver: !!monitor.isOver(),
@@ -27,7 +28,7 @@ const DropTarget = ({ children, id, spaceNumber, canvasName }) => {
     // Notes list
     const [noteCards, setNoteCards] = React.useState([]);
 
-    // function to move note card
+    // function to move note card NOT WORKING
     const moveBox = (id, left, top) => {
         console.log("Moving box");
         setNoteCards((prevNoteCards) =>
@@ -35,6 +36,7 @@ const DropTarget = ({ children, id, spaceNumber, canvasName }) => {
                 card.id === id ? { ...card, left, top } : card
             )
         );
+        console.log("heheeheh");
     };
 
     // function to add new note card
@@ -103,7 +105,7 @@ const DropTarget = ({ children, id, spaceNumber, canvasName }) => {
     const [focusedNoteId, setFocusedNoteId] = useState(null);
     const handleFocus = (e, id) => {
         e.preventDefault(); // Prevent default behavior
-        console.log("Setting focus on note with id: ", id);
+        // console.log("Setting focus on note with id: ", id);
         setFocusedNoteId(id);
     };
 
@@ -134,6 +136,7 @@ const DropTarget = ({ children, id, spaceNumber, canvasName }) => {
             >
                 {noteCards.map((noteCard) => (
                     <DraggableBox
+                        canvasID = {id.id}
                         key={noteCard.id}
                         id={noteCard.id}
                         left={noteCard.left}

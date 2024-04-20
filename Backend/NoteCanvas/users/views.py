@@ -1,12 +1,14 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from .models import CustomUser
 from django.contrib.auth.hashers import make_password
 import json
+from django.contrib.auth.decorators import login_required
+
 
 
 def check(request):
@@ -71,3 +73,44 @@ def loginPage(request):
 def logoutUser(request):
     logout(request)
     return JsonResponse({'message': 'Logged out successfully'}, status=200)
+
+# todo: delete account, update password, forget password.
+
+
+@csrf_exempt
+def delete(request):
+    if request.method == 'DELETE':
+        if request.user.is_authenticated:
+            user = request.user
+            user.delete()
+            logout(request)  # Logs the user out
+            return JsonResponse({"message": "Account deleted successfully"}, status=200)
+        else:
+            return JsonResponse({"message": "User not authenticated"}, status=403)
+    else:
+        return JsonResponse({"message": "Invalid request method"}, status=405)
+
+@csrf_exempt
+def update_password(request):
+    if request.method == 'PUT':
+        if request.user.is_authenticated:
+            data = json.loads(request.body)
+            user = request.user
+            old_password = data.get('old_password')
+            new_password = data.get('new_password')
+            if authenticate(username=user.username, password=old_password):
+                user.set_password(new_password)
+                user.save()
+                # Update session to prevent the user from being logged out
+                update_session_auth_hash(request, user)
+                return JsonResponse({'message': 'Password updated successfully'}, status=200)
+            else:
+                return JsonResponse({"message": "Old password is incorrect"}, status=400)
+        else:
+            return JsonResponse({"message": "User not authenticated"}, status=403)
+    else:
+        return JsonResponse({"message": "Invalid request method"}, status=405)
+
+
+def forget_password(request):
+    pass

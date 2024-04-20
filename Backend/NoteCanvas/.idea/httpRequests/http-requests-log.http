@@ -1,3 +1,371 @@
+POST http://127.0.0.1:8000/accounts/login/
+Content-Type: application/json
+Content-Length: 58
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "email": "temp@gmail.com",
+    "password": "temp1"
+}
+
+<> 2024-04-20T111128.200.json
+
+###
+
+POST http://127.0.0.1:8000/accounts/login/
+Content-Type: application/json
+Content-Length: 57
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "email": "temp@gmail.com",
+    "password": "temp"
+}
+
+<> 2024-04-20T111122.400.json
+
+###
+
+POST http://127.0.0.1:8000/accounts/logout/
+Content-Length: 0
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Cookie: sessionid=0swi6ppib9giz69zch4tcrxwgxnbuxkc
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-04-20T111118.200.json
+
+###
+
+PUT http://127.0.0.1:8000/accounts/update_password/
+Content-Type: application/json
+Content-Length: 59
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Cookie: sessionid=0swi6ppib9giz69zch4tcrxwgxnbuxkc
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "old_password": "temp",
+    "new_password": "temp1"
+}
+
+<> 2024-04-20T111105.400.json
+
+###
+
+PUT http://127.0.0.1:8000/accounts/update_password/
+Content-Type: application/json
+Content-Length: 59
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Cookie: sessionid=r6x3eip92qqsw7dsax3wcq3sikbju56b
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "old_password": "temp",
+    "new_password": "temp1"
+}
+
+<> 2024-04-20T111058.200.json
+
+###
+
+PUT http://127.0.0.1:8000/accounts/update_password/
+Content-Type: application/json
+Content-Length: 59
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Cookie: sessionid=r6x3eip92qqsw7dsax3wcq3sikbju56b
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "old_password": "temp",
+    "new_password": "temp1"
+}
+
+<> 2024-04-20T110824.400.json
+
+###
+
+PUT http://127.0.0.1:8000/accounts/update_password/
+Content-Type: application/json
+Content-Length: 59
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Cookie: sessionid=r6x3eip92qqsw7dsax3wcq3sikbju56b
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "old_password": "temp",
+    "new_password": "temp1"
+}
+
+<> 2024-04-20T110605.400.json
+
+###
+
+PUT http://127.0.0.1:8000/accounts/update_password/
+Content-Type: application/json
+Content-Length: 59
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Cookie: sessionid=r6x3eip92qqsw7dsax3wcq3sikbju56b
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "old_password": "temp",
+    "new_password": "temp1"
+}
+
+<> 2024-04-20T110547.400.json
+
+###
+
+PUT http://127.0.0.1:8000/accounts/update_password/
+Content-Type: application/json
+Content-Length: 59
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Cookie: sessionid=r6x3eip92qqsw7dsax3wcq3sikbju56b
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "old_password": "temp",
+    "new_password": "temp1"
+}
+
+<> 2024-04-20T110252.400.json
+
+###
+
+PUT http://127.0.0.1:8000/accounts/update_password/
+Content-Type: application/json
+Content-Length: 59
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Cookie: sessionid=r6x3eip92qqsw7dsax3wcq3sikbju56b
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "old_password": "temp",
+    "new_password": "temp1"
+}
+
+<> 2024-04-20T110130.400.json
+
+###
+
+POST http://127.0.0.1:8000/accounts/login/
+Content-Type: application/json
+Content-Length: 57
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "email": "temp@gmail.com",
+    "password": "temp"
+}
+
+<> 2024-04-20T110114.200.json
+
+###
+
+POST http://127.0.0.1:8000/accounts/register/
+Content-Type: application/json
+Content-Length: 126
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "signUpUsername": "temp",
+  "signUpEmail": "temp@gmail.com",
+  "signUpFullName": "temp temp",
+  "signUpPassword": "temp"
+}
+
+<> 2024-04-20T110109.201.json
+
+###
+
+DELETE http://127.0.0.1:8000/accounts/delete/
+Content-Type: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Cookie: sessionid=bb4bx25k13zuja6mawnbq81jmbe15oit
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-04-20T105902.200.json
+
+###
+
+DELETE http://127.0.0.1:8000/accounts/delete/
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Cookie: sessionid=bb4bx25k13zuja6mawnbq81jmbe15oit
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-04-20T105636.405.json
+
+###
+
+GET http://127.0.0.1:8000/accounts/check/
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Cookie: sessionid=bb4bx25k13zuja6mawnbq81jmbe15oit
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-04-20T105518.200.json
+
+###
+
+POST http://127.0.0.1:8000/accounts/login/
+Content-Type: application/json
+Content-Length: 57
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "email": "temp@gmail.com",
+    "password": "temp"
+}
+
+<> 2024-04-20T105516.200.json
+
+###
+
+POST http://127.0.0.1:8000/accounts/logout/
+Content-Length: 0
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Cookie: sessionid=r9lzkn0nhfjm3yzu6en0y4irg5p3lt4i
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-04-20T105511.200.json
+
+###
+
+POST http://127.0.0.1:8000/accounts/login/
+Content-Type: application/json
+Content-Length: 57
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "email": "temp@gmail.com",
+    "password": "temp"
+}
+
+<> 2024-04-20T105508.200.json
+
+###
+
+GET http://127.0.0.1:8000/accounts/check/
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-04-20T105449.200.json
+
+###
+
+POST http://127.0.0.1:8000/accounts/register/
+Content-Type: application/json
+Content-Length: 126
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "signUpUsername": "temp",
+  "signUpEmail": "temp@gmail.com",
+  "signUpFullName": "temp temp",
+  "signUpPassword": "temp"
+}
+
+<> 2024-04-20T105401.201.json
+
+###
+
+POST http://127.0.0.1:8000/accounts/register/
+Content-Type: application/json
+Content-Length: 75
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "temp",
+  "email": "temp@gmail.com",
+  "password": "temp"
+}
+
+<> 2024-04-20T105238.400.json
+
+###
+
+POST http://127.0.0.1:8000/accounts/register/
+Content-Type: application/json
+Content-Length: 56
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "temp@gmail.com",
+  "password": "temp"
+}
+
+<> 2024-04-20T105207.400.json
+
+###
+
+POST http://127.0.0.1:8000/accounts/logout/
+Content-Length: 0
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Cookie: sessionid=2c05d0cebpd6ivffqssa7c3yjrj9fd2o
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-04-20T105200.200.json
+
+###
+
+GET http://127.0.0.1:8000/accounts/check/
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Cookie: sessionid=2c05d0cebpd6ivffqssa7c3yjrj9fd2o
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-04-20T105148.200.json
+
+###
+
+POST http://127.0.0.1:8000/accounts/register/
+Content-Type: application/json
+Content-Length: 56
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Cookie: sessionid=2c05d0cebpd6ivffqssa7c3yjrj9fd2o
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "temp@gmail.com",
+  "password": "temp"
+}
+
+<> 2024-04-20T105055.500.html
+
+###
+
 POST http://127.0.0.1:8000/dashboard/
 Content-Length: 0
 Connection: Keep-Alive
@@ -397,176 +765,6 @@ Accept-Encoding: br,deflate,gzip,x-gzip
 }
 
 <> 2024-04-10T003719.500.html
-
-###
-
-POST http://127.0.0.1:8000/notes/create/
-Content-Type: application/json
-Content-Length: 121
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "canvas": 1,
-  "posX": 100,
-  "posY": 100,
-  "height": 200,
-  "width": 200,
-  "pinned": false,
-  "color": "#ff0000"
-}
-
-<> 2024-04-10T003702.404.html
-
-###
-
-POST http://127.0.0.1:8000/canvas/create/
-Content-Type: application/json
-Content-Length: 48
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "title": "Sample Canvas",
-  "user": "deep"
-}
-
-<> 2024-04-09T235858.403.html
-
-###
-
-POST http://127.0.0.1:8000/canvas/create/
-Content-Type: application/json
-Content-Length: 48
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "title": "Sample Canvas",
-  "user": "deep"
-}
-
-<> 2024-04-09T235602.403.html
-
-###
-
-POST http://127.0.0.1:8000/canvas/create/
-Content-Type: application/json
-Content-Length: 48
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "title": "Sample Canvas",
-  "user": "deep"
-}
-
-<> 2024-04-09T235503.500.html
-
-###
-
-POST http://127.0.0.1:8000/canvas/create/
-Content-Type: application/json
-Content-Length: 48
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "title": "Sample Canvas",
-  "user": "deep"
-}
-
-<> 2024-04-09T235405.500.html
-
-###
-
-POST http://127.0.0.1:8000/canvas/create/
-Content-Type: application/json
-Content-Length: 48
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "title": "Sample Canvas",
-  "user": "deep"
-}
-
-<> 2024-04-09T235213.403.html
-
-###
-
-POST http://127.0.0.1:8000/canvas/create/
-Content-Type: application/json
-Content-Length: 48
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "title": "Sample Canvas",
-  "user": "deep"
-}
-
-<> 2024-04-09T235132.403.html
-
-###
-
-POST http://127.0.0.1:8000/canvas/create/
-Content-Type: application/json
-Content-Length: 48
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "title": "Sample Canvas",
-  "user": "deep"
-}
-
-<> 2024-04-09T235038.403.html
-
-###
-
-POST http://127.0.0.1:8000/canvas/create/
-Content-Type: application/json
-Content-Length: 48
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "title": "Sample Canvas",
-  "user": "deep"
-}
-
-<> 2024-04-09T234935.403.html
-
-###
-
-POST http://127.0.0.1:8000/notes/create/
-Content-Type: application/json
-Content-Length: 161
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "notesTitle": "Sample Note",
-  "notesBody": "This is a sample note body.",
-  "posX": 100,
-  "posY": 100,
-  "height": 200,
-  "width": 200,
-  "pinned": false
-}
-
-<> 2024-04-09T221427.201.json
 
 ###
 

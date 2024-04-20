@@ -38,6 +38,6 @@ def userDetails(request):
     return JsonResponse({"userName": userName, "email": userEmail, 'full_name':full_name}, status=200)
 
 
-# todo: delete acount, update password, forget password.
+# todo: delete account, update password, forget password.
 
 # update and retrieve notes

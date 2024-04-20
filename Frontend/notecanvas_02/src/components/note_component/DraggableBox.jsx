@@ -1,4 +1,4 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, useEffect, useState } from "react";
 import { useDrag } from "react-dnd";
 import { Rnd } from "react-rnd";
 import NoteOne from "./NoteOne";
@@ -6,12 +6,14 @@ import { Stack, IconButton, Box, TextField } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
 import NoteColorButton from "../note_component/NoteColorButton";
+import axios from "axios";
 // import { BOX } from "./ItemTypes";
 
 const DraggableBox = forwardRef(
     (
         {
             id,
+            canvasID,
             body,
             left,
             top,
@@ -29,13 +31,18 @@ const DraggableBox = forwardRef(
             item: () => ({ id, left, top }),
             collect: (monitor) => ({
                 isDragging: !!monitor.isDragging(),
+                
             }),
             end: (item, monitor) => {
                 const dropResult = monitor.getDropResult();
                 if (dropResult) {
                     const { left, top } = dropResult;
                     moveBox(item.id, left, top);
+                    console.log("Box moved to", left, top);
+                } else {
+                    console.log("Box moved to", left, top);
                 }
+                console.log("Box moved to", left, top);
             },
         });
 
@@ -47,7 +54,7 @@ const DraggableBox = forwardRef(
         const handleResize = (event, direction, ref, delta, position) => {
             setDimensions({
                 height: ref.offsetHeight,
-                width: ref.style.width,
+                width: ref.offsetWidth,
             });
         };
 
@@ -57,7 +64,8 @@ const DraggableBox = forwardRef(
         const [noteBGColor, setNoteBGColor] = React.useState("#ffffff50");
         const [border, setBorder] = React.useState("1px solid #00000050");
 
-        const [noteContent, setNoteContent] = React.useState("");
+        // const [noteContent, setNoteContent] = React.useState("");
+        const [noteContent, setNoteContent] = React.useState(notesBody);
 
         // noteEditMode is used to toggle between note content view and note content edit mode
         const [noteEditMode, setNoteEditMode] = React.useState(false);
@@ -78,8 +86,40 @@ const DraggableBox = forwardRef(
 
 
 
+
         // using id update contents and color and size and other position 
         // useEffect() => {}
+        const saveNoteChanges = () => {
+            const updateData = {
+                canvasId: canvasID,
+                body: noteContent,
+                backgroundColor: noteBGColor,
+                width: dimensions.width,
+                height: dimensions.height,
+                left: left,
+                top: top
+            }
+
+            axios.put(`http://127.0.0.1:8000/notes/update/${id}/`, updateData,{
+                withCredentials: true  // This will send cookies with the request
+            })
+            .then(response => {
+                console.log("Note updated successfully");
+                console.log(updateData);
+                
+            })
+            .catch(error => {
+                console.error("Failed to update note", error);
+
+            });
+        };
+
+        useEffect(() => {
+            // Update the backend whenever note properties change
+            saveNoteChanges();
+        }, [noteContent, noteBGColor, left, top, dimensions]);
+        
+    
         
         return (
             <div
