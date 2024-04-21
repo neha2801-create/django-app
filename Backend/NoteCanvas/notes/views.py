@@ -126,12 +126,13 @@ def pin_note(request, note_id):
 def get_notes(request, canvas_order):
     try:
         canvas_order = int(canvas_order)
-
+        # print("Order", canvas_order)
         # Retrieve all canvases for the user, sorted by creation time
         canvases = Canvas.objects.filter(user=request.user).order_by('created_at')
         try:
             canvas = canvases[canvas_order-1]
         except IndexError:
+            # print("No such canvas")
             return JsonResponse({"error": "No such canvas."}, status=404)
 
         # Get all notes for the selected canvas, ordered by their creation time
@@ -139,14 +140,14 @@ def get_notes(request, canvas_order):
 
         # Serialize the notes to send as JSON
         notes_data = [{
-            "id": note.id,
+            "id": index+1,
             "body": note.notesBody,
             "left": note.posX,
             "top": note.posY,
             "height": note.height,
             "width": note.width,
             "color": note.color
-        } for note in notes]
+        } for index, note in enumerate(notes)]
 
         return JsonResponse({"notes": notes_data}, status=200, safe=False)
     except ObjectDoesNotExist:

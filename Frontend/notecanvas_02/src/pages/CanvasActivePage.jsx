@@ -8,6 +8,7 @@ import "./canvasActivePage.css";
 import DropTarget from "../components/note_component/DropTarget";
 import { Box, Typography } from "@mui/material";
 import { useParams } from 'react-router-dom';
+import CanvasTitleBar from "./CanvasTitleBar";
 
 
 const CanvasActivePage = ({canvasName, id}) => {
@@ -92,6 +93,7 @@ const CanvasActivePage = ({canvasName, id}) => {
                 addedUsersClick={handleCollaboratorsClick}
                 shareButtonClick={handleCollaboratorsClick}
             />
+            <CanvasTitleBar />
 
 
             {/* <h1>hello</h1> */}

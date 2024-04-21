@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useState } from "react";
+import React, { forwardRef, useEffect, useState, useRef } from "react";
 import { useDrag } from "react-dnd";
 import { Rnd } from "react-rnd";
 import NoteOne from "./NoteOne";
@@ -17,12 +17,15 @@ const DraggableBox = forwardRef(
             body,
             left,
             top,
+            height,
+            width,
+            color,
             moveBox,
             zIndex,
             onClick,
             handleNoteDelete,
             handleAddNewNote,
-            notesBody
+            // notesBody
         },
         ref
     ) => {
@@ -46,10 +49,12 @@ const DraggableBox = forwardRef(
             },
         });
 
-        const [dimensions, setDimensions] = React.useState({
-            width: 300,
-            height: 300,
-        });
+        const [dimensions, setDimensions] = useState({ width, height });
+
+        // const [dimensions, setDimensions] = React.useState({
+        //     width: 300,
+        //     height: 300,
+        // });
 
         const handleResize = (event, direction, ref, delta, position) => {
             setDimensions({
@@ -60,26 +65,36 @@ const DraggableBox = forwardRef(
 
 
 
-
-        const [noteBGColor, setNoteBGColor] = React.useState("#ffffff50");
+        const [noteBGColor, setNoteBGColor] = useState(color);
+        // const [noteBGColor, setNoteBGColor] = React.useState("#ffffff50");
         const [border, setBorder] = React.useState("1px solid #00000050");
 
         // const [noteContent, setNoteContent] = React.useState("");
-        const [noteContent, setNoteContent] = React.useState(notesBody);
+        // const [noteContent, setNoteContent] = React.useState(notesBody);
+        const [noteContent, setNoteContent] = React.useState(body);
+
+        useEffect(() => {
+            setNoteContent(body);
+            setNoteBGColor(color);
+            setDimensions({ width, height });
+        // }, []);
+        }, [body, color, width, height]);
+
 
         // noteEditMode is used to toggle between note content view and note content edit mode
         const [noteEditMode, setNoteEditMode] = React.useState(false);
 
         const handleNoteContentChange = (event) => {
-            setNoteEditMode(!noteEditMode);
-            if (document.activeElement.id === "noteContentTextField") {
-                console.log("Note content text field has focus");
-                setBorder("2px dashed blue");
-                return;
-            } else {
-                console.log("Note content text field does not have focus");
-                setBorder("1px solid #00000050");
-            }
+            // setNoteContent(e.target.value);
+            // setNoteEditMode(!noteEditMode);
+            // if (document.activeElement.id === "noteContentTextField") {
+            //     console.log("Note content text field has focus");
+            //     setBorder("2px dashed blue");
+            //     return;
+            // } else {
+            //     console.log("Note content text field does not have focus");
+            //     setBorder("1px solid #00000050");
+            // }
         };
 
         const [isHovered, setIsHovered] = React.useState(false);
@@ -114,13 +129,32 @@ const DraggableBox = forwardRef(
             });
         };
 
+        
         useEffect(() => {
             // Update the backend whenever note properties change
             saveNoteChanges();
+            // setNoteContent()
+            
         }, [noteContent, noteBGColor, left, top, dimensions]);
         
+        const [noteContentValue, setNoteContentValue] = useState(body);
+
+        useEffect(()=>{
+            setNoteContentValue(noteContent);
+        }, [noteContent]);
     
+        useEffect(() => {
+            if (textFieldRef.current) {
+              textFieldRef.current.focus();
+            }
+          }, [noteContent]);
         
+        const textFieldRef = useRef(null);
+
+        // const handleNoteContentChange = (event) => {
+        //     setNoteContent(event.target.value);
+        //   };
+
         return (
             <div
                 onMouseEnter={() => setIsHovered(true)}
@@ -145,6 +179,17 @@ const DraggableBox = forwardRef(
                         backdropFilter: "blur(10px)",
                         zIndex: zIndex,
                     }}
+                    size={{ width: dimensions.width, height: dimensions.height }}
+                    position={{ x: left, y: top }}
+                    onDragStop={(e, d) => {
+                        moveBox(id, d.x, d.y);
+                    }}
+                    // onResizeStop={handleResize}
+                    // style={{
+                    //     border: isDragging ? "2px dashed blue" : "1px solid #000",
+                    //     zIndex,
+                    // }}
+
                 >
                     <Stack flexGrow={1} width={"100%"}>
                         {isHovered ? (
@@ -226,6 +271,8 @@ const DraggableBox = forwardRef(
                             }}
                         >
                             <TextField
+                            ref={textFieldRef}
+
                                 variant="standard"
                                 minRows={9}
                                 InputProps={{
@@ -240,7 +287,7 @@ const DraggableBox = forwardRef(
                                     disableUnderline: true,
                                 }}
                                 id="noteContentTextField"
-                                value={notesBody}
+                                value={noteContentValue}
                                 onChange={(e) => setNoteContent(e.target.value)}
                                 // when losing focus, toggle noteEditMode
                                 onBlur={() => handleNoteContentChange()}
@@ -258,3 +305,5 @@ const DraggableBox = forwardRef(
 );
 
 export default DraggableBox;
+
+

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDrop } from "react-dnd";
 import DraggableBox from "./DraggableBox";
 import { Stack, Typography } from "@mui/material";
@@ -58,7 +58,8 @@ const DropTarget = ({ children, id, spaceNumber, canvasName }) => {
             height: 100,           // Default height
             width: 200,            // Default width
             pinned: false,         // Default pinned status
-            color: '#FFD700'       // Default color
+            color: '#FFD700'    
+               // Default color
         };
         console.log("Space Number", spaceNumber);
         console.log("ID", id);
@@ -112,10 +113,45 @@ const DropTarget = ({ children, id, spaceNumber, canvasName }) => {
     // fun useeffect: for retrieving the notes list
     // {
     //     data
-            // after retrieve, map to draggable boxnpm
+            // after retrieve, map to draggable box 
     // }
 
+    useEffect(() => {
+        const fetchNotes = async () => {
+            try {
+                const response = await fetch(`http://127.0.0.1:8000/notes/get/${id.id}/`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',  // Necessary if sessions are managed
+                });
 
+                if (response.ok) {
+                    const rawData = await response.json();
+                    const notesData = rawData.notes; 
+                    console.log('Notes fetched:', notesData.body);
+                    setNoteCards(notesData.map(note => ({
+                        id: note.id,  // Assume each note has a unique ID from the backend
+                        left: note.left, 
+                        top: note.top,
+                        height: note.height,
+                        width: note.width,
+                        color: note.color,
+                        notesContent: note.body, // Assuming 'notesBody' is the field for the content
+                        // pinned: note.pinned  // Assuming there's a 'pinned' property
+                    })));
+    
+                } else {
+                    console.error('Failed to fetch notes:', response.status);
+                }
+            } catch (error) {
+                console.error('Error fetching notes:', error);
+            }
+        };
+
+        fetchNotes();
+    }, [id.id]);
 
     return (
         <Stack
@@ -141,6 +177,10 @@ const DropTarget = ({ children, id, spaceNumber, canvasName }) => {
                         id={noteCard.id}
                         left={noteCard.left}
                         top={noteCard.top}
+                        height={noteCard.height}
+                        width={noteCard.width}
+                        color={noteCard.color}
+                        body={noteCard.notesContent}
                         moveBox={moveBox}
                         zIndex={focusedNoteId === noteCard.id ? 1000 : 1}
                         onClick={(e) => handleFocus(e, noteCard.id)}

@@ -8,10 +8,12 @@ import RoundedButton from "./RoundedButton";
 import PeopleIcon from "@mui/icons-material/People";
 import { getTheme } from "../Theme";
 
+
 // todo: break this component into sub-components. compartmentalize!!!
 
 const UserAvatar = ({onlineUsersList, shareButtonClick, addedUsersClick}) => {
 
+    const navigate = useNavigate();
     const [userDetails, setUserDetails] = useState({});
 
 
@@ -69,14 +71,18 @@ const UserAvatar = ({onlineUsersList, shareButtonClick, addedUsersClick}) => {
 
     const handlePreferences = () => {
         // todo: preferences logic goes here
-        console.log("Preferences");
+
+        navigate("/userPref");
+
+        
+        // console.log("Preferences");
     };
 
     const handleAbout = () => {
         // todo: about logic goes here
         console.log("About");
     };
-    const navigate = useNavigate();
+    
     const handleLogOut = async () => {
         // todo: Logout logic goes here
         console.log("Logout");
@@ -131,7 +137,7 @@ const UserAvatar = ({onlineUsersList, shareButtonClick, addedUsersClick}) => {
                     border: "1px #3F3F3F solid",
                 }}
             >
-                {/* {userDetails.userName[0]} */}
+                {/* {userDetails.userName.charAt(0)} */}
             </Avatar>
             <Menu
             elevation={0}
