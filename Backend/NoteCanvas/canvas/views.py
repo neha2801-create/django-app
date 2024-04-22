@@ -42,21 +42,6 @@ def get(request, canvas_order):
         "notes": notes_data,
     }, status=200)
 
-
-    # Fetch the canvas by ID and ensure it belongs to the current user or return 404 if not found
-    # canvas = get_object_or_404(Canvas, id=canvas_id, user=request.user)
-    #
-    # # Retrieve all notes associated with this canvas
-    # notes = Note.objects.filter(canvas=canvas)
-    #
-    #
-    # notes_str = "Notes on Canvas '{}':\n\n".format(canvas.name)
-    # for note in notes:
-    #     notes_str += "Title: {}\nBody: {}\n---\n".format(note.notesBody, note.posX, note.posY, note.height, note.width, note.pinned, note.color)
-    #
-    # # Return the notes as HttpResponse
-    # return HttpResponse(notes_str, content_type="text/plain")
-
 @csrf_exempt
 def create_canvas(request):
     # First, ensure the user is authenticated
@@ -119,6 +104,11 @@ def update(request, canvas_order):
         canvas = canvases[canvas_order-1]
     except IndexError:
         return JsonResponse({"error": "No such canvas."}, status=404)
+
+    data = json.loads(request.body)
+    title = data.get('title')
+    canvas.title = title
+    canvas.save()
 
     return JsonResponse({
         'title': canvas.title,

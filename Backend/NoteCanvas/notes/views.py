@@ -35,30 +35,9 @@ def create_note(request, canvas_order):
     except json.JSONDecodeError:
         return JsonResponse({'error': 'Bad request'}, status=400)
 
-    # try:
-    #     data = json.loads(request.body)
-    #     try:
-    #         canvas = Canvas.objects.get(id=canvas_id)
-    #     except ObjectDoesNotExist:
-    #         return JsonResponse({"error": f"Canvas with id {canvas_id} does not exist."}, status=404)
-    #     note = Note.objects.create(
-    #         canvas=canvas,
-    #         # notesBody=data['notesBody'], # this will be blank in create so change model accordingly
-    #         posX=data['posX'],
-    #         posY=data['posY'],
-    #         height=data['height'],
-    #         width=data['width'],
-    #         pinned=data['pinned'],
-    #         color=data['color']
-    #     )
-    #     return JsonResponse({"message": "Note created successfully.", "note_id": note.id}, status=201)
-    # except Exception as e:
-    #     return JsonResponse({"error": str(e)}, status=400)
-
 @csrf_exempt
 @require_http_methods(["DELETE"])
 def delete_note(request, note_order):
-    # print("delete")
     try:
         data = json.loads(request.body)
         print(data)
@@ -78,7 +57,6 @@ def delete_note(request, note_order):
             note = notes[note_order-1]
         except IndexError:
             return JsonResponse({"error": "No such note."}, status=404)
-        # print("Note", note)
         note.delete()
         return JsonResponse({"message": "Note deleted."}, status=200)
     except ObjectDoesNotExist:
@@ -87,14 +65,11 @@ def delete_note(request, note_order):
 @csrf_exempt
 @require_http_methods(["PUT"])
 def update_note(request, note_order):
-    # print("in update")
     try:
         data = json.loads(request.body)
         print(data)
         canvas_order = int(data.get('canvasId'))
         canvases = Canvas.objects.filter(user=request.user).order_by('created_at')
-        # print("again ", canvas_order, canvases, len(canvases))
-        # canvas = canvases[canvas_order-1]
         try:
             canvas = canvases[canvas_order-1]
         except IndexError:
@@ -105,10 +80,7 @@ def update_note(request, note_order):
             note = notes[note_order-1]
         except IndexError:
             return JsonResponse({"error": "No such note."}, status=404)
-        # print(notes)
-        # print(data, " ", note_order, " ", request.user, " ", data.get('canvasId'))
-        # so I have canvasnumber, username
-        # note = Note.objects.get(id=note_id)
+
         note.notesBody = data.get('body', note.notesBody)
         note.posX = float(data.get('left', note.posX))
         note.posY = float(data.get('top', note.posY))
@@ -119,10 +91,8 @@ def update_note(request, note_order):
         note.save()
         return JsonResponse({"message": "Note updated successfully."}, status=200)
     except ObjectDoesNotExist:
-        # print("obj error")
         return JsonResponse({"error": "Note not found."}, status=404)
     except Exception as e:
-        # print("exception error")
         return JsonResponse({"error": str(e)}, status=400)
 
 @csrf_exempt
@@ -144,19 +114,14 @@ def pin_note(request, note_id):
 def get_notes(request, canvas_order):
     try:
         canvas_order = int(canvas_order)
-        # print("Order", canvas_order)
-        # Retrieve all canvases for the user, sorted by creation time
         canvases = Canvas.objects.filter(user=request.user).order_by('created_at')
         try:
             canvas = canvases[canvas_order-1]
         except IndexError:
-            # print("No such canvas")
             return JsonResponse({"error": "No such canvas."}, status=404)
 
-        # Get all notes for the selected canvas, ordered by their creation time
         notes = Note.objects.filter(canvas=canvas).order_by('created_at')
 
-        # Serialize the notes to send as JSON
         notes_data = [{
             "id": index+1,
             "body": note.notesBody,

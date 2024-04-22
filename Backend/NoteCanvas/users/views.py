@@ -80,8 +80,6 @@ def logoutUser(request):
     logout(request)
     return JsonResponse({'message': 'Logged out successfully'}, status=200)
 
-# todo: delete account, update password, forget password.
-
 
 @csrf_exempt
 def delete(request):
@@ -124,7 +122,6 @@ def forget_password(request):
 @csrf_exempt
 def active_users(request):
     query_set = CustomUser.objects.filter(status=CustomUser.Status.ONLINE).exclude(id=request.user.id).values('id', 'full_name')
-    # print("Online Users", query_set)
     online_users = [
         {
             'id': index + 1,

@@ -7,7 +7,7 @@ from django.utils.timezone import localtime
 @csrf_exempt
 @login_required
 def dashboard(request):
-    # print(request.user)
+    print(request.user)
     # if not request.user.is_authenticated:
     #     return JsonResponse({"error": "User not authenticated"}, status=403)
 
