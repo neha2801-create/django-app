@@ -57,11 +57,30 @@ def create_note(request, canvas_order):
 
 @csrf_exempt
 @require_http_methods(["DELETE"])
-def delete_note(request, note_id):
+def delete_note(request, note_order):
+    # print("delete")
     try:
-        note = Note.objects.get(id=note_id)
+        data = json.loads(request.body)
+        print(data)
+        canvas_order = int(data.get('canvasId'))
+        canvases = Canvas.objects.filter(user=request.user).order_by('created_at')
+        # print("again ", canvas_order, canvases, len(canvases))
+        # canvas = canvases[canvas_order-1]
+        # print(canvases)
+        try:
+            canvas = canvases[canvas_order-1]
+        except IndexError:
+            return JsonResponse({"error": "No such canvas."}, status=404)
+        # print("canvas ", canvas)
+        notes = Note.objects.filter(canvas=canvas).order_by('created_at')
+        print("check", note_order, notes, len(notes))
+        try:
+            note = notes[note_order-1]
+        except IndexError:
+            return JsonResponse({"error": "No such note."}, status=404)
+        # print("Note", note)
         note.delete()
-        return JsonResponse({"message": "Note deleted successfully."}, status=200)
+        return JsonResponse({"message": "Note deleted."}, status=200)
     except ObjectDoesNotExist:
         return JsonResponse({"error": "Note not found."}, status=404)
 
@@ -70,7 +89,6 @@ def delete_note(request, note_id):
 def update_note(request, note_order):
     # print("in update")
     try:
-
         data = json.loads(request.body)
         print(data)
         canvas_order = int(data.get('canvasId'))

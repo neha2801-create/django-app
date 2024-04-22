@@ -33,6 +33,13 @@ def register(request):
                 # profile_picture=data['signUpProfilePic'] # todo: check if data contains signupProfilepic key then only access it
             )
             user.save()
+            username=data['signUpUsername']
+            password=data['signUpPassword']
+
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                # print("login also")
+                login(request, user)
             return JsonResponse({'message': 'User created successfully'}, status=201)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
@@ -41,7 +48,6 @@ def register(request):
 
 @csrf_exempt
 def loginPage(request):
-    # print("in login")
     # print(request.user)
     # if request.user.is_authenticated:
     #     return redirect('index')
@@ -114,3 +120,28 @@ def update_password(request):
 
 def forget_password(request):
     pass
+
+@csrf_exempt
+def active_users(request):
+    query_set = CustomUser.objects.filter(status=CustomUser.Status.ONLINE).exclude(id=request.user.id).values('id', 'full_name')
+    # print("Online Users", query_set)
+    online_users = [
+        {
+            'id': index + 1,
+            'name': user['full_name'],
+        }
+        for index, user in enumerate(query_set.values('id', 'full_name'))
+    ]
+    print("Online_users", online_users)
+    return JsonResponse({'users': online_users}, status= 200)
+
+
+@csrf_exempt
+def toggleStatus(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'Authentication required'}, status=403)
+    data = json.loads(request.body)
+    status = data.get('status')
+    request.user.status = status
+    request.user.save()
+    return JsonResponse({'status': status}, status=200)

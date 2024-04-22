@@ -35,9 +35,6 @@ def userDetails(request):
     userName = request.user.username
     userEmail = request.user.email
     full_name = request.user.full_name
-    return JsonResponse({"userName": userName, "email": userEmail, 'full_name':full_name}, status=200)
+    status = request.user.status
+    return JsonResponse({"userName": userName, "email": userEmail, 'full_name':full_name, 'status': status}, status=200)
 
-
-# todo: delete account, update password, forget password.
-
-# update and retrieve notes
