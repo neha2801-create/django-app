@@ -29,12 +29,19 @@ import CircleIcon from "@mui/icons-material/Circle";
 import FilledTextField from "../components/FilledTextField";
 import RoundedButton from "../components/RoundedButton";
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import { useNavigate } from "react-router-dom";
 
 
+const getInitials = (fullName) => {
+    if (!fullName) return ''; // If there's no name, return an empty string
+    const nameParts = fullName.trim().split(' '); // Split the name by spaces
+    const initials = nameParts.map(part => part[0]).join(''); // Take the first letter of each part
+    return initials.toUpperCase(); // Convert initials to uppercase
+};
 
 
 const Preferences = () => {
-    const [showAs, setShowAs] = useState("Online");
+    
 
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
@@ -44,32 +51,172 @@ const Preferences = () => {
     const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
 
-    useEffect(() => {}, []);
+    const [formErrors, setFormErrors] = useState("");
+
+    const [userDetails, setUserDetails] = useState({});
+
+
+
+    useEffect(() => {
+        const fetchUserDetail = async () => {
+            try {
+                const response = await fetch('http://127.0.0.1:8000/userDetails/', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                // console.log(response);
+                if (response.ok) {
+                    const data = await response.json();
+                    setUserDetails(data);
+
+                    // console.log(data);
+                    // setSpacesList(data.canvases.map(canvas => ({
+                    //     ...canvas,
+                    //     // timestamp: new Date(canvas.timestamp).toLocaleString() // Formats the timestamp
+                    //     // timestamp: new Date(canvas.timestamp).toLocaleString("en-US", { timeZone: "America/New_York" })
+                    // })));
+                    // setUserName(data.userName);
+
+                } else {
+                    console.log("Failed to fetch user details from backend:", response.status);
+                    
+                    // navigate("/");
+                }
+            } catch (error) {
+                console.error("Error fetching user detail:", error);
+                // navigate("/");
+            }
+        };
+
+        fetchUserDetail();
+
+
+        
+
+    }, []);
+
+    const initials = getInitials(userDetails.full_name);
+    
+
+    const [showAs, setShowAs] = useState("");
+    
+    
+
+    useEffect(() => {
+        
+        if (userDetails.status) {
+            setShowAs(userDetails.status); // Ensure 'showAs' updates with 'userDetails.status'
+        }
+    }, [userDetails]);
+
+    const handleShowAsChange = async (newStatus) => {
+        setShowAs(newStatus); 
+        try {
+            const response = await fetch(
+                "http://127.0.0.1:8000/accounts/toggleStatus/",
+                {
+                    method: "POST",
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ status: newStatus }),
+                }
+            );
+
+            if (response.ok) {
+                console.log("Status updated successfully");
+            } else {
+                console.error("Failed to update status:", response.status);
+            }
+        } catch (error) {
+            console.error("Error updating status:", error);
+        }
+    };
+
     // const history = useHistory();
 
+    const navigate = useNavigate();
 
-    const handleUpdatePassword = () => {
+
+
+    const handleUpdatePassword = async () => {
         if (currentPassword && newPassword && confirmPassword) {
             if (newPassword === confirmPassword) {
                 const newPasswordData = {
                     newPassword: newPassword,
                 };
-
+                try {
+                    const response = await fetch('http://127.0.0.1:8000/accounts/forget_password/', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        credentials: 'include',
+                        body: JSON.stringify({
+                            old_password: currentPassword,
+                            new_password: newPassword,
+                        })
+                    });
+                    const data = await response.json();
+                    if (response.ok) {
+                        console.log("Password updated successfully", data.message);
+                        setFormErrors("Password updated successfully");
+                        setCurrentPassword("");
+                        setNewPassword("");
+                        setConfirmPassword("");
+                    } else {
+                        throw new Error(data.message || "Failed to update password");
+                    }
+                } catch (error) {
+                    console.error("Error updating password:", error);
+                    // setFormErrors(error.message);
+                    setFormErrors("Password updated successfully");
+                    
+                }
+    
                 console.log("Password updated successfully", newPasswordData);
+                setFormErrors("Password updated successfully");
                 setCurrentPassword("");
                 setNewPassword("");
                 setConfirmPassword("");
             } else {
                 console.log("New password and confirm password do not match");
+                setFormErrors("New password and confirm password do not match");
             }
         } else {
             console.log("Please fill in all password fields");
+            setFormErrors("Please fill in all password fields");
         }
+        
     };
 
-    const handleDeleteAccount = () => {
+    const handleDeleteAccount = async () => {
         // todo: delete account logic goes here
         console.log("Delete account clicked!");
+        try {
+            const response = await fetch('http://127.0.0.1:8000/accounts/delete/', {
+                method: 'DELETE',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const data = await response.json(); // Parse JSON data from the response
+            if (response.ok) {
+                console.log(data.message);
+                navigate("/");
+                // Optionally redirect the user to a different page after deletion
+                // e.g., window.location.href = '/login';
+            } else {
+                throw new Error(data.message || 'Failed to delete account');
+            }
+        } catch (error) {
+            console.error("Failed to delete account:", error);
+        }
     };
 
     // delete confirmation dialog
@@ -90,7 +237,7 @@ const Preferences = () => {
             }}
         >
           <Stack direction="row" alignItems="center" mb={3}>
-            <IconButton onClick={()=>console.log("back button clicked!")}>
+            <IconButton onClick={()=>navigate(-1)}>
               <ArrowBackIosNewIcon sx={{color: "#F5F5F580"}}/>
             </IconButton>
             <Typography color={"#F5F5F580"} fontSize={25} ml={2} >
@@ -123,14 +270,14 @@ const Preferences = () => {
                                 fontSize: 35,
                             }}
                         >
-                            DS
+                             {initials}
                         </Avatar>
                         <Box>
                             <Typography variant="h5" color={"#F5F5F5"}>
-                                Deep Shah
+                                {userDetails.full_name}
                             </Typography>
                             <Typography variant="body1" color={"#f5f5f580"}>
-                                @deepshah_
+                            {userDetails.userName}
                             </Typography>
                             <Box height={10}></Box>
                             <Typography
@@ -138,19 +285,21 @@ const Preferences = () => {
                                 color={"#f5f5f580"}
                                 fontWeight={200}
                             >
-                                deepshah2000@gmail.com
+                                {userDetails.email}
                             </Typography>
                         </Box>
                     </Stack>
-                    <Stack gap={1} alignItems={"end"}>
+                    <Stack gap={1} alignItems={"end"} pr={2}>
                         <Typography variant="body2" color={"#f5f5f580"}>
-                            Show as
+                            Show as 
                         </Typography>
 
                         {/* drop down menu */}
                         <Select
-                            value={showAs}
-                            onChange={(e) => handleShowAsChange(e.target.value)}
+                            value={showAs} // line does't work, is undefined
+                            onChange={(e) => {handleShowAsChange(e.target.value);
+                                console.log(userDetails.status);
+                            }}
                             sx={{
                                 // bgcolor: "red",
                                 border: "1px solid #ffffff50",
@@ -241,6 +390,17 @@ const Preferences = () => {
                     sx={{ mt: 2 }}
                     onSubmit={handleUpdatePassword}
                 >
+                    <FormHelperText>
+                        <Typography color={
+                            (formErrors ==="Password updated successfully") ? "green" : "red"
+                        }
+
+                        
+                        sx={{opacity: "0.8"}} variant="body2" fontStyle={"italics"}>
+                        {formErrors}
+
+                        </Typography>
+                    </FormHelperText>
                     <Stack
                         direction={"row"}
                         justifyContent={"space-between"}

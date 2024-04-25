@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 
 
 
-def check(request):
+def check(request): # for testing only
     if request.user.is_authenticated:
         return JsonResponse({'message': 'User is authenticated'}, status=200)
     else:
@@ -24,21 +24,21 @@ def register(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            print(request.body)
+
             user = CustomUser.objects.create(
                 username=data['signUpUsername'],
                 email=data['signUpEmail'],
                 full_name=data['signUpFullName'],
                 password=make_password(data['signUpPassword']),
-                # profile_picture=data['signUpProfilePic'] # todo: check if data contains signupProfilepic key then only access it
+                # profile_picture=data['signUpProfilePic'] # todo: remove this field
             )
+
             user.save()
             username=data['signUpUsername']
             password=data['signUpPassword']
 
             user = authenticate(request, username=username, password=password)
             if user is not None:
-                # print("login also")
                 login(request, user)
             return JsonResponse({'message': 'User created successfully'}, status=201)
         except Exception as e:
@@ -48,24 +48,19 @@ def register(request):
 
 @csrf_exempt
 def loginPage(request):
-    # print(request.user)
-    # if request.user.is_authenticated:
-    #     return redirect('index')
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
             email = data.get('email')
             password = data.get('password')
-            # print(email, password)
             User = get_user_model()
             try:
-                username = User.objects.get(email=email) #get username from email
+                username = User.objects.get(email=email)
             except User.DoesNotExist:
                 username = None
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                # print(request.user)
                 return JsonResponse({'message': 'Login successful'}, status=200)
             else:
                 return JsonResponse({'error': 'Invalid credentials'}, status=400)
@@ -80,14 +75,13 @@ def logoutUser(request):
     logout(request)
     return JsonResponse({'message': 'Logged out successfully'}, status=200)
 
-
 @csrf_exempt
 def delete(request):
     if request.method == 'DELETE':
         if request.user.is_authenticated:
             user = request.user
             user.delete()
-            logout(request)  # Logs the user out
+            logout(request)
             return JsonResponse({"message": "Account deleted successfully"}, status=200)
         else:
             return JsonResponse({"message": "User not authenticated"}, status=403)
@@ -117,10 +111,10 @@ def update_password(request):
 
 
 def forget_password(request):
-    pass
+    pass # todo
 
 @csrf_exempt
-def active_users(request):
+def active_users(request): # todo: also create apis for busy and offline users
     query_set = CustomUser.objects.filter(status=CustomUser.Status.ONLINE).exclude(id=request.user.id).values('id', 'full_name')
     online_users = [
         {
@@ -129,7 +123,6 @@ def active_users(request):
         }
         for index, user in enumerate(query_set.values('id', 'full_name'))
     ]
-    print("Online_users", online_users)
     return JsonResponse({'users': online_users}, status= 200)
 
 

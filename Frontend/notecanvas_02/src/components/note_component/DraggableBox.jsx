@@ -100,10 +100,6 @@ const DraggableBox = forwardRef(
         const [isHovered, setIsHovered] = React.useState(false);
 
 
-
-
-        // using id update contents and color and size and other position 
-        // useEffect() => {}
         const saveNoteChanges = () => {
             const updateData = {
                 canvasId: canvasID,
@@ -116,7 +112,7 @@ const DraggableBox = forwardRef(
             }
 
             axios.put(`http://127.0.0.1:8000/notes/update/${id}/`, updateData,{
-                withCredentials: true  // This will send cookies with the request
+                withCredentials: true  
             })
             .then(response => {
                 console.log("Note updated successfully");

@@ -7,6 +7,9 @@ import {
     IconButton,
     Box,
     Button,
+    Dialog,
+    DialogTitle,
+    DialogContent,
 } from "@mui/material";
 import UserAvatar from "../components/UserAvatar";
 
@@ -17,11 +20,13 @@ import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import SpaceItemCard from "../components/SpaceItemCard";
 import OnlineUserCard from "../components/OnlineUserCard";
 import TuneOutlinedIcon from "@mui/icons-material/TuneOutlined";
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import NewLogo from "../assets/new_logo@3x.png";
 import NewSpaceDialog from "../components/NewSpaceDialog";
 import { v4 as uuidv4 } from "uuid";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
+// import NewLogo from "../assets/new_logo@3x.png";
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -31,10 +36,10 @@ const Dashboard = () => {
         try {
             const response = await fetch('http://127.0.0.1:8000/accounts/logout/', {
                 method: 'POST',
-                credentials: 'include', // Include cookies in the request. Needed for sessions.
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
-                    // Include CSRF token header if necessary for your backend
+                    // Include CSRF token header
                 },
             });
 
@@ -42,10 +47,7 @@ const Dashboard = () => {
                 // Logout successful
                 console.log("Logged out successfully.");
                 navigate("/");
-                // Optionally redirect the user or update the UI state
-                // window.location.href = '/login';
             } else {
-                // Handle server-side validation error messages, etc.
                 console.log("Logout failed:", response.status);
             }
         } catch (error) {
@@ -53,49 +55,6 @@ const Dashboard = () => {
         }
     };
 
-    // Lists of spaces and online users (rn static but will be fetched from backend) - useEffect
-    // const [spacesList, setSpacesList] = React.useState([
-    //     {
-    //         id: 1,
-    //         title: "Web Dev Project Brainstorming",
-    //         timestamp: "4:42 PM 12/12/2021",
-    //     },
-    //     {
-    //         id: 2,
-    //         title: "Sequences and Series",
-    //         timestamp: "4:42 PM 12/12/2021",
-    //     },
-    //     {
-    //         id: 3,
-    //         title: "Design Inspo",
-    //         timestamp: "4:42 PM 12/12/2021",
-    //     },
-    //     {
-    //         id: 4,
-    //         title: "Overlapping Squares and Circles",
-    //         timestamp: "4:42 PM 12/12/2021",
-    //     },
-    //     {
-    //         id: 5,
-    //         title: "Food Blog Ideas",
-    //         timestamp: "4:42 PM 12/12/2021",
-    //     },
-    //     {
-    //         id: 6,
-    //         title: "Tentative Component List",
-    //         timestamp: "4:42 PM 12/12/2021",
-    //     },
-    //     {
-    //         id: 7,
-    //         title: "Sleep Walking Ideas",
-    //         timestamp: "4:42 PM 12/12/2021",
-    //     },
-    //     {
-    //         id: 8,
-    //         title: "Space 8",
-    //         timestamp: "4:42 PM 12/12/2021",
-    //     },
-    // ]);
     const [spacesList, setSpacesList] = useState([]);
     const [userName, setUserName] = useState('');
 
@@ -104,13 +63,12 @@ const Dashboard = () => {
             try {
                 const response = await fetch('http://127.0.0.1:8000/dashboard/', {
                     method: 'POST',
-                    credentials: 'include', // Include cookies in the request. Needed for sessions.
+                    credentials: 'include',
                     headers: {
                         'Content-Type': 'application/json',
-                        // Include CSRF token header if necessary for your backend
+                        // Include CSRF token header
                     },
                 });
-                // console.log(response);
                 if (response.ok) {
                     const data = await response.json();
                     setSpacesList(data.canvases.map(canvas => ({
@@ -122,7 +80,7 @@ const Dashboard = () => {
 
                 } else {
                     console.log("Failed to fetch canvases:", response.status);
-                    
+
                     navigate("/");
                 }
             } catch (error) {
@@ -134,33 +92,50 @@ const Dashboard = () => {
         fetchCanvases();
     }, []);
 
-    const [onlineUsers, setOnlineUsers] = React.useState([
-        {
-            id: 1,
-            name: "Michael Scott",
-        },
-        {
-            id: 2,
-            name: "Dwight Schrute",
-        },
-        {
-            id: 3,
-            name: "Jim Halpert",
-        },
-        {
-            id: 4,
-            name: "Pam Beesly",
-        },
-        {
-            id: 5,
-            name: "Ryan Howard",
-        },
-    ]);
+    const [onlineUsers, setOnlineUsers] = useState([]);
+
+    useEffect(() => {
+        const fetchOnlineUsers = async () => {
+            try {
+                const response = await fetch('http://127.0.0.1:8000/accounts/active/', {
+                    method: 'GET',
+                    credentials: 'include', // Include cookies in the request
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Include CSRF token header 
+                    },
+                });
+                if (response.ok) {
+                    const rawData = await response.json();
+                    console.log(rawData.users);
+                    if (Array.isArray(rawData.users) && rawData.users.length > 0) {
+                        const transformedUsers = rawData.users.map(user => ({
+                            ...user,
+                            name: user.name || "Name not available"
+                        }));
+                        setOnlineUsers(transformedUsers);
+                    } else {
+                        console.log("rawData.users is not an array or is empty");
+                        setOnlineUsers([]);
+                    }
+
+
+                } else {
+                    throw new Error('Failed to load users');
+                }
+            } catch (error) {
+                console.error('Failed to fetch online users:', error);
+            }
+        };
+
+        fetchOnlineUsers();
+    }, []);
+
+
 
     // const [currentSortOrder, setCurrentSortOrder] = React.useState("time");
     // Spaces Functions to handle add, delete and click on
     const handleAddNewSpace = async (newCanvasName) => {
-        console.log("BLALALAL Add new space clicked!");
         // new space will be added to the spaces list
         // mui dialog will be used to get the title of the space
         // const newId = spacesList.length + 1;
@@ -186,7 +161,7 @@ const Dashboard = () => {
 
         const data = {
 
-            title: newCanvasName, // Use the correct attribute name as per your backend model
+            title: newCanvasName,
         };
 
         console.log("Title", data.title);
@@ -221,11 +196,6 @@ const Dashboard = () => {
     };
 
     const handleSpaceClick = (id) => {
-        // onClick will be used to navigate to the space
-        console.log(`Space ${id} clicked!`);
-        console.log(`http://127.0.0.1:8000/canvas/get/${id}`);
-        // const navigate1 = useNavigate();  // Get the navigate function from useNavigate hook
-        // console.log("After navigate");
 
         const fetchDataAndNavigate = async () => {
             console.log(`Preparing to go to ${id}`);
@@ -233,7 +203,7 @@ const Dashboard = () => {
             try {
                 const response = await fetch(`http://127.0.0.1:8000/canvas/get/${id}/`, {
                     method: 'GET',
-                    credentials: 'include', // Ensure cookies for session management are included
+                    credentials: 'include',
                     headers: {
                         'Content-Type': 'application/json'
                     },
@@ -241,8 +211,6 @@ const Dashboard = () => {
 
                 if (response.ok) {
                     const data = await response.json();
-                    console.log('Canvas data:', data);
-                    // Navigate to a canvas page and pass the fetched data
                     navigate(`/canvas/${id}/`, { state: { canvasData: data } });
                 } else {
                     console.error('Failed to fetch canvas data:', response.status);
@@ -251,25 +219,20 @@ const Dashboard = () => {
                 console.error('Error fetching canvas data:', error);
             }
         };
-        // // console.log("Before call");
-        // // Since hooks cannot be called inside callbacks or conditions
-        // // we call a separate async function defined within the handler
+
         fetchDataAndNavigate();
     };
 
     const handleSpaceDelete = (id) => {
-        // onDelete will be used to delete the space using the id
-        console.log(`Attempting to delete Space ${id}`);
 
-        // Define the URL of the delete endpoint
-        const url = `http://127.0.0.1:8000/canvas/delete/${id}/`; // Adjust this URL to your actual endpoint
+        const url = `http://127.0.0.1:8000/canvas/delete/${id}/`;
 
         // Make a fetch request to delete the canvas
         fetch(url, {
-            method: 'DELETE', // Use DELETE method
-            credentials: 'include', // Ensure cookies are included if using sessions
+            method: 'DELETE',
+            credentials: 'include',
             headers: {
-                'Content-Type': 'application/json', // Set the appropriate content type
+                'Content-Type': 'application/json',
             },
         })
             .then(response => {
@@ -285,10 +248,9 @@ const Dashboard = () => {
                         console.log(`Updated list length: ${updatedSpacesList.length}`);
                         return updatedSpacesList;
                     });
-                    console.log(`Space ${id} deleted successfully!`);
-                    console.log(id);
+                    // console.log(`Space ${id} deleted successfully!`);
+                    // console.log(id);
                 } else {
-                    // Log error if the server responded with an error
                     console.error(`Failed to delete Space ${id}:`, response.status);
                 }
             })
@@ -306,6 +268,17 @@ const Dashboard = () => {
 
     const handleOption2 = () => {
         console.log("Option 2 clicked!");
+    };
+
+
+    // about the app dialog
+    const [open, setOpen] = React.useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+    const handleClose = () => {
+        setOpen(false);
     };
 
     return (
@@ -352,23 +325,93 @@ const Dashboard = () => {
                         fontFamily={"Poppins"}
                         color={"white"}
                     >
-                        @{userName}
+                        {userName}
                     </Typography>
                 </Stack>
 
                 <Stack direction={"row"} alignItems={"center"} spacing={2}>
                     <IconButton
-                        onClick={() => console.log("Theme button clicked")}
+                        onClick={handleClickOpen}
+                        // onClick={() => console.log("Theme button clicked")}
                         sx={{ color: "white", backgroundColor: "#484848" }}
                     >
-                        <DarkModeOutlinedIcon />
+                        <InfoOutlinedIcon />
                     </IconButton>
+                    <Dialog
+                        open={open}
+                        onClose={handleClose}
+                        PaperProps={{
+                            sx: {
+                                bgcolor: "#141414",
+                                color: "white",
+                                borderRadius: "15px",
+                                border: "1px #ffffff20 solid",
+                            },
+                            component: "form",
+                            onSubmit: (event) => {
+                                event.preventDefault();
+                                // const formData = new FormData(event.currentTarget);
+                                // const formJson = Object.fromEntries(formData.entries());
+                                // const email = formJson.email;
+                                // // console.log(email);
+                                // handleClose();
+                            },
+                        }}
+                    >
+                        <DialogTitle textAlign={"center"} color={"#ffffff80"}>
+                            About the app
+                        </DialogTitle>
+                        <DialogContent sx={{ width: "400px" }}>
+                            <Stack justifyItems="center" alignContent={"center"} width={"100%"} justifyContent={"center"} alignItems={"center"} alignSelf={"center"}>
+                                <Box
+                                    bgcolor={"#ffffff40"}
+                                    borderRadius={5}
+                                    height={"70px"}
+                                >
+
+                                    <img
+                                        src={NewLogo}
+                                        height={"50px"}
+                                        width={"50px"}
+                                        style={{
+                                            backgroundColor: "#23232220",
+                                            padding: 10,
+                                            borderRadius: "25px",
+                                        }}
+                                    />
+                                </Box>
+                                <Typography
+                                    fontSize={20}
+                                    fontFamily={"poppins"}
+                                    mt={1}
+                                    fontWeight={500}
+                                >
+                                    NoteCanvas
+                                </Typography>
+                            </Stack>
+                            <Typography
+                                mt={2}
+                                textAlign={"center"}
+                                color={"#ffffff90"}
+                            >
+                                NoteCanvas is in its early stages of development, with version 1 ready to be deployed.
+                                Currently, it's a simple application where you can create, move, and resize notes on a static canvas.
+
+                                We're working on additional features, like free text elements, support for images, and other multimedia content. As we continue to improve NoteCanvas, we'll release updates that make it even more versatile and useful.
+                            </Typography>
+                        </DialogContent>
+                    </Dialog>
                     <IconButton
-                        onClick={() => console.log("Theme button clicked")}
+                        onClick={() => navigate('/userPref')}
                         sx={{ color: "white", backgroundColor: "#484848" }}
                     >
+
                         <TuneOutlinedIcon />
                     </IconButton>
+
+
+
+
                     <RoundedButton
                         borderRadius="20px"
                         bgcolor="#484848"

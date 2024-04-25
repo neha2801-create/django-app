@@ -2,8 +2,6 @@ from django.db import models
 from canvas.models import Canvas
 from django.utils import timezone
 
-# Create your models here.
-
 class Note(models.Model):
     canvas = models.ForeignKey(Canvas, on_delete=models.CASCADE, related_name='notes')
     notesBody = models.TextField(blank=True)

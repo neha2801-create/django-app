@@ -36,7 +36,6 @@ const DropTarget = ({ children, id, spaceNumber, canvasName }) => {
                 card.id === id ? { ...card, left, top } : card
             )
         );
-        console.log("heheeheh");
     };
 
     // function to add new note card
@@ -53,13 +52,12 @@ const DropTarget = ({ children, id, spaceNumber, canvasName }) => {
 
         const noteData = {
             // notesBody: "New Note",
-            posX: e.clientX,  // Adjust according to your coordinate system
+            posX: e.clientX,
             posY: e.clientY,
-            height: 100,           // Default height
-            width: 200,            // Default width
-            pinned: false,         // Default pinned status
-            color: '#FFD700'    
-               // Default color
+            height: 100,         
+            width: 200,          
+            pinned: false,       
+            color: '#FFD700'   
         };
         console.log("Space Number", spaceNumber);
         console.log("ID", id);
@@ -71,7 +69,7 @@ const DropTarget = ({ children, id, spaceNumber, canvasName }) => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(noteData),
-                credentials: 'include',  // Necessary if you're managing sessions
+                credentials: 'include', 
             });
 
             if (response.ok) {
@@ -95,11 +93,38 @@ const DropTarget = ({ children, id, spaceNumber, canvasName }) => {
     };
 
     // function to delete note card
-    const deleteNoteCard = (id) => {
-        console.log("Deleting note card with id: ", id);
-        setNoteCards((prevNoteCards) =>
-            prevNoteCards.filter((card) => card.id !== id)
-        );
+    const deleteNoteCard = async (note_id) => {
+        console.log("Deleting note card with id: ", note_id);
+        console.log("Space id:", id.id);
+        const data = {
+            canvasId: id.id,
+        }
+        try {
+            
+            const response = await fetch(`http://127.0.0.1:8000/notes/delete/${note_id}/`, {
+                method: "DELETE",
+                // No need for Content-Type header for DELETE requests
+                // No need for body for DELETE requests
+                credentials: "include",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ canvasId: id.id })
+            });
+            if (response.ok) {
+              setNoteCards((prevNoteCards) =>
+                prevNoteCards.filter((card) => card.id !== note_id)
+              );
+              console.log("Note deleted successfully");
+            } else {
+              console.error("Failed to delete note:", response.status);
+            }
+          } catch (error) {
+            console.error("Error deleting note:", error);
+          }
+        // setNoteCards((prevNoteCards) =>
+        //     prevNoteCards.filter((card) => card.id !== id)
+        // );
     };
 
     // function to set focus on note card
@@ -110,11 +135,6 @@ const DropTarget = ({ children, id, spaceNumber, canvasName }) => {
         setFocusedNoteId(id);
     };
 
-    // fun useeffect: for retrieving the notes list
-    // {
-    //     data
-            // after retrieve, map to draggable box 
-    // }
 
     useEffect(() => {
         const fetchNotes = async () => {
@@ -124,7 +144,7 @@ const DropTarget = ({ children, id, spaceNumber, canvasName }) => {
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    credentials: 'include',  // Necessary if sessions are managed
+                    credentials: 'include',
                 });
 
                 if (response.ok) {
@@ -132,14 +152,14 @@ const DropTarget = ({ children, id, spaceNumber, canvasName }) => {
                     const notesData = rawData.notes; 
                     console.log('Notes fetched:', notesData.body);
                     setNoteCards(notesData.map(note => ({
-                        id: note.id,  // Assume each note has a unique ID from the backend
+                        id: note.id,
                         left: note.left, 
                         top: note.top,
                         height: note.height,
                         width: note.width,
                         color: note.color,
-                        notesContent: note.body, // Assuming 'notesBody' is the field for the content
-                        // pinned: note.pinned  // Assuming there's a 'pinned' property
+                        notesContent: note.body,
+                        // pinned: note.pinned  
                     })));
     
                 } else {

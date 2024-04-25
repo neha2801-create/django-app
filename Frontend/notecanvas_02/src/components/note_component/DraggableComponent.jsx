@@ -1,10 +1,10 @@
 import React from "react";
 import { useDrag } from "react-dnd";
-import { ItemTypes } from "./ItemTypes"; // Define your item types
+import { ItemTypes } from "./ItemTypes";
 
 const DraggableComponent = ({ id, children }) => {
     const [{ isDragging }, drag] = useDrag({
-        item: { type: ItemTypes.BOX, id }, // Specify the item type and ID
+        item: { type: ItemTypes.BOX, id },
         collect: (monitor) => ({
             isDragging: !!monitor.isDragging(),
         }),
