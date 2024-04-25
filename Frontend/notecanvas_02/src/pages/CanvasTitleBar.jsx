@@ -1,16 +1,42 @@
 import { FilledInput, Stack, TextField } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 
 const CanvasTitleBar = ({ canvasTitle }) => {
-    const [title, setTitle] = React.useState("Canvas Title");
+    const [title, setTitle] = React.useState(canvasTitle);
 
-    // todo: useEffect to fetch
-    // title mein save
+    const handleTitleChange = async (e) => {
+        const newTitle = e.target.value;
+        // setTitle(newTitle);
 
-    const handleTitleChange = (e) => {
-        setTitle(e.target.value);
-        // todo: send title to backend
+        // Define the data to send in the request
+        const data = JSON.stringify({ title: newTitle });
+
+        const canvasOrder = 1;
+
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/canvas/update/${canvasOrder}/`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: data,
+                credentials: 'include',
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update the title');
+            }
+
+            const responseData = await response.json();
+            console.log('Title updated:', responseData);
+        } catch (error) {
+            console.error('Error updating title:', error);
+        }
+        useEffect(() => {
+            setTitle(newTitle);
+        }, [newTitle]);
     };
+
 
     return (
         <div

@@ -28,9 +28,10 @@ const SignUpForm = () => {
         signUpPassword: "",
     });
     
+
+    const navigate = useNavigate();
     
     const [formErrors, setFormErrors] = useState({});
-   
 
 
     const clearForm = () => {
@@ -49,11 +50,45 @@ const SignUpForm = () => {
         
     };
 
+    // const loginAfterSignUp =(email, password) => {
+    //     fetch('http://127.0.0.1:8000/accounts/login/', {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify({
+    //                 email: email,
+    //                 password: passoword,
+    //             }),
+    //             credentials: 'include'
+    //         })
+    //         .then(response => {
+    //             if(!response.ok){
+    //                 // If the server response is not ok (e.g., status 400 or 500), throw an error.
+    //                 // You could also check for specific statuses with response.status
+    //                 // Todo: show invalid credentials in frontend
+    //                 newErrors.failedToLogin = "Email or passsword is incorrect. Try again.";
+    //                 setFormErrors(newErrors);
+    //                 throw new Error('Network response was not ok.');
+    //             }
+                
+    //             return response.json(); // parse json if response ok
+    //         })
+    //         .then(data => {
+    //             // Handle success, e.g., navigate to another page, store the token, etc.
+    //             // navigate("/dashboard"); // For example, after successful login
+    //             // if (!)
+    //             navigate("/dashboard");
+    //         })
+    //         .catch((error) => {
+    //             console.error('Error:', error);
+    //         });
+    // }
+
+
     // const [signUpButtonDisabled, setSignUpButtonDisabled] = useState(true);
 
 
-    // todo 1: form validation: WORKING
-    // todo 2: form submit to backend
     const validateSignUp = () => {
         let newErrors = {};
 
@@ -88,11 +123,11 @@ const SignUpForm = () => {
             axios.post('http://127.0.0.1:8000/accounts/register/', JSON.stringify(formData), {
                 headers: {
                     'Content-Type': 'application/json',
-    
                 },
+                credentials: 'include',
             }).then(response => {
                 console.log("Success:", response.data);
-                navigate("/dashboard");
+                navigate("/");
             }).catch(error => {
                 console.error("There was an error submitting the form:", error);
             });
@@ -101,6 +136,9 @@ const SignUpForm = () => {
                 "Form submitted successfully:",
                 JSON.stringify(formData)
             );
+            navigate("/dashboard");
+            console.log("checkzzzz")
+            // loginAfterSignUp(formData.signUpEmail, formData.signUpPassword);
         } else {
             console.log(formErrors);
         }
@@ -124,12 +162,7 @@ const SignUpForm = () => {
     const handleAvatarUpload = () => {
         console.log("Avatar upload");
 
-        // todo: profile photo upload logic goes here
-        // get the image file
-        // upload to the server
-        // get the url
-        // set the url to the user profile
-
+        
         // for now, just log the file
         console.log(document.getElementById("fileInput").files[0].name);
         setAvatarFile(document.getElementById("fileInput").files[0].name);
@@ -157,9 +190,8 @@ const SignUpForm = () => {
                 </Typography>
             </Box>
             <FormControl fullWidth>
-                <Stack mt={3} direction={"row"}>
+                {/* <Stack mt={3} direction={"row"}>
                     <Avatar
-                    // onChange={handleAvatarUpload}
                     src={avatarFile}
                         sx={{
                             height: 100,
@@ -185,11 +217,10 @@ const SignUpForm = () => {
                         mt="0"
                         fontSize="15px"
                     >
-                        {/* todo: user photo upload */}
                         Upload photo
                         <FileUploadOutlinedIcon sx={{ paddingLeft: 1 }} />
                     </RoundedButton>
-                </Stack>
+                </Stack> */}
 
                 <FilledTextField
                     label={"Full name"}
@@ -265,7 +296,7 @@ const SignUpForm = () => {
                         onClick={validateSignUp}
                         // disabled={signUpButtonDisabled}
                     >
-                        Get started
+                        Sign Up
                         <ArrowForwardIcon sx={{ paddingLeft: "10px" }} />
                     </RoundedButton>
                     <RoundedButton

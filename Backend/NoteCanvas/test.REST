@@ -82,7 +82,7 @@ Content-Type: application/json
 ###
 
 # Update a note
-# Note: Replace `1` with the actual note ID you wish to update
+# Note: Replace `1` with the actual note ID
 PUT {{host}}/notes/update/1/ HTTP/1.1
 Content-Type: application/json
 
@@ -99,13 +99,13 @@ Content-Type: application/json
 ###
 
 # Delete a note
-# Note: Replace `1` with the actual note ID you wish to delete
+# Note: Replace `1` with the actual note ID
 DELETE {{host}}/notes/delete/4/ HTTP/1.1
 
 ###
 
 # Pin/Unpin a note
-# Note: Replace `1` with the actual note ID you wish to pin/unpin
+# Note: Replace `1` with the actual note ID
 POST {{host}}/notes/pin/1/ HTTP/1.1
 Content-Type: application/json
 

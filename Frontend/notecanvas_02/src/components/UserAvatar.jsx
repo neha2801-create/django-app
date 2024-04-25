@@ -22,10 +22,9 @@ const UserAvatar = ({onlineUsersList, shareButtonClick, addedUsersClick}) => {
             try {
                 const response = await fetch('http://127.0.0.1:8000/userDetails/', {
                     method: 'POST',
-                    credentials: 'include', // Include cookies in the request. Needed for sessions.
+                    credentials: 'include',
                     headers: {
                         'Content-Type': 'application/json',
-                        // Include CSRF token header if necessary for your backend
                     },
                 });
                 // console.log(response);
@@ -73,15 +72,8 @@ const UserAvatar = ({onlineUsersList, shareButtonClick, addedUsersClick}) => {
         // todo: preferences logic goes here
 
         navigate("/userPref");
-
-        
-        // console.log("Preferences");
     };
 
-    const handleAbout = () => {
-        // todo: about logic goes here
-        console.log("About");
-    };
     
     const handleLogOut = async () => {
         // todo: Logout logic goes here
@@ -89,10 +81,9 @@ const UserAvatar = ({onlineUsersList, shareButtonClick, addedUsersClick}) => {
         try {
             const response = await fetch('http://127.0.0.1:8000/accounts/logout/', {
                 method: 'POST',
-                credentials: 'include', // Include cookies in the request. Needed for sessions.
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
-                    // Include CSRF token header if necessary for your backend
                 },
             });
 
@@ -103,7 +94,6 @@ const UserAvatar = ({onlineUsersList, shareButtonClick, addedUsersClick}) => {
                 // Optionally redirect the user or update the UI state
                 // window.location.href = '/login';
             } else {
-                // Handle server-side validation error messages, etc.
                 console.log("Logout failed:", response.status);
             }
         } catch (error) {
@@ -174,7 +164,7 @@ const UserAvatar = ({onlineUsersList, shareButtonClick, addedUsersClick}) => {
                         <TuneRounded /> Preferences
                     </Stack>
                 </MenuItem>
-                <MenuItem onClick={handleAbout}>
+                {/* <MenuItem onClick={handleAbout}>
                     <Stack
                         direction={"row"}
                         justifyContent={"space-between"}
@@ -183,7 +173,7 @@ const UserAvatar = ({onlineUsersList, shareButtonClick, addedUsersClick}) => {
                     >
                         <InfoOutlinedIcon /> About
                     </Stack>
-                </MenuItem>
+                </MenuItem> */}
                 <MenuItem onClick={handleLogOut}>
                     <Stack
                         direction={"row"}

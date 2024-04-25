@@ -175,8 +175,10 @@ const LandingPage = () => {
                                         mt={2}
                                         lineHeight={"200%"}
                                     >
-                                        Accounts/Preferences <br />
-                                        Notes customization <br />
+                                        Basic testing  <br/>
+                                        Free text insert <br/>
+                                        Text formatting <br/>
+                                        
                                     </Typography>
                                 </Box>
                             </Stack>

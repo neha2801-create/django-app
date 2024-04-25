@@ -32,6 +32,7 @@ const LoginForm = () => {
 
     const [showPassword, setShowPassword] = useState(false);
 
+
     // todo: form validation
     function handleLogin() {
         let newErrors = {};
@@ -53,6 +54,7 @@ const LoginForm = () => {
         }
 
         setFormErrors(newErrors);
+        
         if (Object.keys(newErrors).length === 0) {
             // todo 2: Sending form to backend
             // setSignUpButtonDisabled(true);
@@ -69,12 +71,12 @@ const LoginForm = () => {
             })
             .then(response => {
                 if(!response.ok){
-                    // If the server response is not ok (e.g., status 400 or 500), throw an error.
-                    // You could also check for specific statuses with response.status
-                    // Todo: show invalid credentials in frontend
+                    newErrors.failedToLogin = "Email or passsword is incorrect. Try again.";
+                    setFormErrors(newErrors);
                     throw new Error('Network response was not ok.');
                 }
-                return response.json(); // parse json if response ok
+                
+                return response.json();
             })
             .then(data => {
                 // Handle success, e.g., navigate to another page, store the token, etc.
@@ -84,14 +86,13 @@ const LoginForm = () => {
             })
             .catch((error) => {
                 console.error('Error:', error);
-                // Handle errors, e.g., show error message to the user
             });
             navigate("/");
 
-            console.log(
-                "Form submitted successfully:",
-                JSON.stringify(loginFormData)
-            );
+            // console.log(
+            //     "Form submitted successfully:",
+            //     JSON.stringify(loginFormData)
+            // );
 
         } else {
             console.log(formErrors);
@@ -121,9 +122,12 @@ const LoginForm = () => {
                     >
                         {/* Email or passsword is incorrect. Try again. */}
                         {formErrors.loginEmailOrUsername ||
-                        formErrors.loginPassword
+                        formErrors.loginPassword || formErrors.failedToLogin
                             ? "Email or passsword is incorrect. Try again."
                             : ""}
+                        {
+
+                        }
                     </Typography>
                 </Box>
                 <FilledTextField
