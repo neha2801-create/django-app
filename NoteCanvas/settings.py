@@ -83,6 +83,7 @@ WSGI_APPLICATION = 'NoteCanvas.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES : {
+    'ENGINE': 'django.db.backends.sqlite3',
     'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
 }
 
