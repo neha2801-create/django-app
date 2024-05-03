@@ -138,7 +138,7 @@ AUTH_USER_MODEL = 'users.CustomUser'
 
 CORS_ALLOWED_ORIGINS = [
     "https://localhost:5173",
-    "https://frontend-six-mocha-85.vercel.app/"
+    "https://frontend-six-mocha-85.vercel.app"
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -168,11 +168,11 @@ CORS_ALLOW_HEADERS = [
 CORS_ALLOW_CREDENTIALS = True
 
 CSRF_COOKIE_NAME = "csrftoken"
-CSRF_TRUSTED_ORIGINS = ['https://localhost:5173','https://frontend-six-mocha-85.vercel.app/']
+CSRF_TRUSTED_ORIGINS = ['https://localhost:5173','https://frontend-six-mocha-85.vercel.app']
 
 SESSION_COOKIE_NAME = 'sessionid'
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SECURE = True
 SESSION_COOKIE_SAMESITE = 'None'
 
-ALLOWED_HOSTS = ['backend-note-canvas-b557254203fe.herokuapp.com', 'localhost', '127.0.0.1', 'frontend-six-mocha-85.vercel.app']
+ALLOWED_HOSTS = ['backend-note-canvas-b557254203fe.herokuapp.com', 'localhost', '127.0.0.1', 'https://frontend-six-mocha-85.vercel.app']
