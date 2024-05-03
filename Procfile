@@ -1,0 +1,1 @@
+web: gunicorn NoteCanvas.wsgi --log-file -
